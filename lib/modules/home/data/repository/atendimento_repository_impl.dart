@@ -52,4 +52,16 @@ class AtendimentoRepositoryImpl implements AtendimentoRepository{
    await db.delete('atendimento', where: 'id = ?', whereArgs: [id]);
    return;
   }
+  @override
+Future<void> deleteVarios(List<int> ids) async {
+  final db = await dbProvider.database;
+
+  for (final id in ids) {
+    await db.delete(
+      'atendimento',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+}
 }

@@ -6,5 +6,5 @@ abstract class AtendimentoRepository {
    Future<void> postAtendimento(AtendimentoModel atendimentoModel);
    Future<void> deleteAtendimento(int id);
    Future<void> putAtendimento(AtendimentoModel atendimentoModel, int id);
-
+   Future<void> deleteVarios(List<int> ids);
 }

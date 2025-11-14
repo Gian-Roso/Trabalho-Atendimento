@@ -33,4 +33,8 @@ class AtendimentoUsecaseImpl implements AtendimentoUsecase{
   Future<void> putAtendimento(AtendimentoModel atendimentoModel, int id) async {   
   return await atendimentoRepository.putAtendimento(atendimentoModel, id);
   }      
+  @override
+  Future<void> deleteVarios(List<int> ids) async {
+  return await atendimentoRepository.deleteVarios(ids);
+  }
 }

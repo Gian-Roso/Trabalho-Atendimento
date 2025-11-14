@@ -7,31 +7,35 @@ class AtendimentoModel {
   final int status;
   final String? foto;
 
-  AtendimentoModel(
-    {
-      this.id, required this.nome,required this.data, this.criadoEm, this.descricao, required this.status, this.foto 
-    }
-  );
+  AtendimentoModel({
+    this.id,
+    required this.nome,
+    required this.data,
+    this.criadoEm,
+    this.descricao,
+    required this.status,
+    this.foto,
+  });
+
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'nome': nome,
-    'data': data,
-    'criado_em': criadoEm,
-    'descricao': descricao,
-    'status': status,
-    'foto': foto,
-  };
+        'id': id,
+        'nome': nome,
+        'data': data.toIso8601String(),
+        'criado_em': criadoEm?.toIso8601String(),
+        'descricao': descricao,
+        'status': status,
+        'foto': foto,
+      };
 
   factory AtendimentoModel.fromMap(Map<String, dynamic> map) {
     return AtendimentoModel(
       id: map['id'],
       nome: map['nome'],
-      data: map['data'],
-      criadoEm: map['criadoEm'],
+      data: DateTime.parse(map['data']),
+      criadoEm: map['criado_em'] != null ? DateTime.parse(map['criado_em']) : null,
       descricao: map['descricao'],
       status: map['status'],
       foto: map['foto'],
     );
   }
 }
-
