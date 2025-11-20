@@ -50,11 +50,11 @@ class StatusChip extends StatelessWidget {
 
   Color _statusColor(int status) {
     switch (status) {
-      case 0: return const Color.fromARGB(255, 245, 45, 62);
+      case 0: return const Color.fromARGB(255, 147, 29, 158);
       case 1: return const Color.fromARGB(255, 63, 177, 162);
       case 2: return const Color.fromARGB(255, 80, 219, 98);
       case 3: return Colors.black;
-      default: return const Color.fromARGB(255, 255, 208, 0);
+      default: return const Color.fromARGB(255, 255, 123, 0);
     }
   }
 }

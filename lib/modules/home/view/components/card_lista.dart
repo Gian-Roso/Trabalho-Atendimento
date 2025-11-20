@@ -6,7 +6,12 @@ import 'options_menu.dart';
 
 class CardLista extends StatelessWidget {
   final AtendimentoModel atendimentoCard;
-  CardLista({super.key, required this.atendimentoCard});
+  final Future<void> Function(int value) deleteF;
+  final void Function(AtendimentoModel atendimento,int value) editF;
+  final void Function(AtendimentoModel atendimento, int value) inativF;
+  final void Function(int value) detalharF;
+  
+  CardLista({super.key, required this.atendimentoCard, required this.deleteF, required this.editF, required this.inativF, required this.detalharF});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +53,7 @@ class CardLista extends StatelessWidget {
                         StatusChip(status: atendimentoCard.status),
                         OptionsMenu(
                           onSelected: (value) {
-                          },
+                          }, deleteF: deleteF, editF: editF, inativF: inativF, detalharF: detalharF, atendimento: atendimentoCard,
                         ),
                       ],
                     ),

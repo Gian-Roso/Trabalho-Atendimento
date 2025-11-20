@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:trabfinal/modules/home/core/domain/model/atendimento_model.dart';
 
 class OptionsMenu extends StatelessWidget {
   final void Function(int value)? onSelected;
+  final Future<void> Function(int value) deleteF;
+  final void Function(AtendimentoModel atendimento,int value) editF;
+  final void Function(AtendimentoModel atendimento, int value) inativF;
+  final void Function(int value) detalharF;
+  final AtendimentoModel atendimento;
 
-  const OptionsMenu({super.key, this.onSelected});
+  const OptionsMenu({super.key, this.onSelected, required this.deleteF, required this.editF, required this.inativF, required this.detalharF, required this.atendimento});
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +52,10 @@ class OptionsMenu extends StatelessWidget {
           ),
         ),
         PopupMenuItem(
+          onTap: () async 
+          {print(atendimento.toMap());}
+          // => await deleteF(atendimento.id!)
+          ,
           value: 4,
           child: Row(
             children: const [

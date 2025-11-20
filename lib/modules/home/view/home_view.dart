@@ -17,11 +17,13 @@ class HomeView extends StatelessWidget {
       child: BlocBuilder<HomeController, HomeState>(
         builder: (context, state) {
           return Scaffold(
-            backgroundColor: Colors.grey.shade100,
+            backgroundColor: const Color.fromARGB(255, 16, 10, 19),
             body: Builder(
               builder: (context) {
                 return state is HomeCarregado ?
-                HomeLista(atendimento:state.atendimentos) :
+                HomeLista(atendimento:state.atendimentos, reloadFunction: () async {
+                  controller.getAtendimentos();
+                }, deleteF: controller.deleteAtendimento, editF: controller.putAtendimento, inativF: controller.putAtendimento, detalharF: controller.getAtendimento,) :
                 Center(
                   child: CircularProgressIndicator(),
                 );

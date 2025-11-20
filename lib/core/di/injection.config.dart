@@ -12,6 +12,8 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:trabfinal/core/database/app_db.dart' as _i246;
+import 'package:trabfinal/modules/home/controller/cadastro_controller.dart'
+    as _i130;
 import 'package:trabfinal/modules/home/controller/home_controller.dart'
     as _i149;
 import 'package:trabfinal/modules/home/core/domain/contract/repository/atendimento_repository.dart'
@@ -36,6 +38,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i892.AtendimentoUsecase>(
       () => _i517.AtendimentoUsecaseImpl(gh<_i1013.AtendimentoRepository>()),
+    );
+    gh.factory<_i130.CadastroController>(
+      () => _i130.CadastroController(gh<_i892.AtendimentoUsecase>()),
     );
     gh.factory<_i149.HomeController>(
       () => _i149.HomeController(gh<_i892.AtendimentoUsecase>()),

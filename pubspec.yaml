@@ -37,3 +37,4 @@ flutter:
 
   assets:
     - lib/core/database/migrations/database.sql
+    - lib/assets/
