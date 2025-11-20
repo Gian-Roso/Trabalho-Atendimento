@@ -41,8 +41,9 @@ class HomeController extends Cubit<HomeState>{
 
   
   Future<void> putAtendimento(AtendimentoModel atendimentoModel, int id) async {   
-      emit(HomeCarregando());
-      await atendimentoUsecase.putAtendimento(atendimentoModel, id);
-      await putAtendimento(atendimentoModel, id);
-  }  
+    emit(HomeCarregando());
+    await atendimentoUsecase.putAtendimento(atendimentoModel, id);
+    await getAtendimentos();
+  }
+
 }
