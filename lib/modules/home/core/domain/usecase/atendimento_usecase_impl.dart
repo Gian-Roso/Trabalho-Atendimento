@@ -4,33 +4,35 @@ import 'package:trabfinal/modules/home/core/domain/contract/usecase/atendimento_
 import 'package:trabfinal/modules/home/core/domain/model/atendimento_model.dart';
 
 @LazySingleton(as: AtendimentoUsecase)
-class AtendimentoUsecaseImpl implements AtendimentoUsecase{
-  final AtendimentoRepository atendimentoRepository;
+class AtendimentoUsecaseImpl implements AtendimentoUsecase {
+  final AtendimentoRepository repository; 
 
-  AtendimentoUsecaseImpl (this.atendimentoRepository);
+  AtendimentoUsecaseImpl({
+    required this.repository, 
+  });
 
   @override
-  Future<void> deleteAtendimento(int id) async { 
-      return await atendimentoRepository.deleteAtendimento(id);
+  Future<List<AtendimentoModel>> getAtendimentos() async {
+    return await repository.getAtendimentos();
   }
 
   @override
-  Future<AtendimentoModel> getAtendimento(int id) async {  
-    return await atendimentoRepository.getAtendimento(id);
-  }      
-
-  @override
-  Future<List<AtendimentoModel>> getAtendimentos() async { 
-      return await atendimentoRepository.getAtendimentos();
+  Future<AtendimentoModel> getAtendimento(int id) async {
+    return await repository.getAtendimento(id);
   }
 
   @override
-  Future<void> postAtendimento(AtendimentoModel atendimentoModel) async { 
-      return await atendimentoRepository.postAtendimento(atendimentoModel);
+  Future<AtendimentoModel> postAtendimento(AtendimentoModel atendimentoModel) async {
+    return await repository.postAtendimento(atendimentoModel); 
   }
 
   @override
-  Future<void> putAtendimento(AtendimentoModel atendimentoModel, int id) async {   
-  return await atendimentoRepository.putAtendimento(atendimentoModel, id);
-  }      
+  Future<AtendimentoModel> putAtendimento(AtendimentoModel atendimentoModel, int id) async {
+    return await repository.putAtendimento(atendimentoModel, id);
+  }
+
+  @override
+  Future<void> deleteAtendimento(int id) async {
+    return await repository.deleteAtendimento(id);
+  }
 }

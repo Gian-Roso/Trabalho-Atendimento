@@ -31,10 +31,19 @@ class CadastroController extends Cubit<CadastroState> {
   void atualizarStatus(int status) {
     emit(state.copyWith(statusSelecionado: status));
   }
+   void carregarAtendimento(AtendimentoModel atendimento) {
+    emit(CadastroAtualizar(atendimento));
+  }
 
-  Future<void> postCadastro(AtendimentoModel atendimentoModel) async {
-    await atendimentoUsecase.postAtendimento(atendimentoModel);
+  // ✅ NOVO: Método para limpar formulário
+  void limparFormulario() {
     emit(CadastroNovo());
+  }
+
+  Future<AtendimentoModel> postCadastro(AtendimentoModel atendimentoModel) async {
+  final atendimentoSalvo = await atendimentoUsecase.postAtendimento(atendimentoModel);
+  emit(CadastroNovo());
+  return atendimentoSalvo; 
   }
 
   Future<void> putAtendimento(AtendimentoModel atendimentoModel, int id) async {

@@ -37,7 +37,9 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i478.AtendimentoRepositoryImpl(dbProvider: gh<_i246.AppDB>()),
     );
     gh.lazySingleton<_i892.AtendimentoUsecase>(
-      () => _i517.AtendimentoUsecaseImpl(gh<_i1013.AtendimentoRepository>()),
+      () => _i517.AtendimentoUsecaseImpl(
+        repository: gh<_i1013.AtendimentoRepository>(),
+      ),
     );
     gh.factory<_i130.CadastroController>(
       () => _i130.CadastroController(gh<_i892.AtendimentoUsecase>()),

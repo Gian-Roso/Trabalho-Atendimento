@@ -7,16 +7,49 @@ import 'package:trabfinal/modules/home/controller/cadastro_controller.dart';
 import 'package:trabfinal/modules/home/core/domain/model/atendimento_model.dart';
 import 'package:trabfinal/modules/home/state/cadastro_state.dart';
 
-class CadastrarAtendimentoView extends StatelessWidget {
+class CadastrarAtendimentoView extends StatefulWidget {
+  final AtendimentoModel? atendimentoParaEditar; // ✅ Parâmetro opcional
+
+  const CadastrarAtendimentoView({
+    super.key,
+    this.atendimentoParaEditar, // ✅ Para edição
+  });
+
+  @override
+  State<CadastrarAtendimentoView> createState() => _CadastrarAtendimentoViewState();
+}
+
+class _CadastrarAtendimentoViewState extends State<CadastrarAtendimentoView> {
   final controller = getIt<CadastroController>();
-
-  CadastrarAtendimentoView({super.key});
-
   final TextEditingController nomeController = TextEditingController();
   final TextEditingController descricaoController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    
+    // ✅ Se tem atendimento para editar, carrega os dados
+    if (widget.atendimentoParaEditar != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        controller.carregarAtendimento(widget.atendimentoParaEditar!);
+        // ✅ Preenche os TextControllers
+        nomeController.text = widget.atendimentoParaEditar!.nome;
+        descricaoController.text = widget.atendimentoParaEditar!.descricao ?? '';
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    nomeController.dispose();
+    descricaoController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final isEdicao = widget.atendimentoParaEditar != null; // ✅ Verifica se é edição
+
     return BlocProvider.value(
       value: controller,
       child: BlocBuilder<CadastroController, CadastroState>(
@@ -30,9 +63,7 @@ class CadastrarAtendimentoView extends StatelessWidget {
           }
 
           Future<void> selecionarHora() async {
-            final hora = await dateTimePicker(
-              context: context
-            );
+            final hora = await dateTimePicker(context: context);
             if (hora != null) {
               controller.atualizarHora(DateTime(
                 hora.year,
@@ -47,14 +78,17 @@ class CadastrarAtendimentoView extends StatelessWidget {
           return Scaffold(
             backgroundColor: const Color(0xFFF3F3F3),
             appBar: AppBar(
-              title: const Text(
-                "Novo Atendimento",
-                style: TextStyle(color: Colors.white),
+              title: Text(
+                isEdicao ? "Editar Atendimento" : "Novo Atendimento", // ✅ Título dinâmico
+                style: const TextStyle(color: Colors.white),
               ),
               backgroundColor: const Color(0xFF1A1A1A),
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back, color: Colors.white),
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  controller.limparFormulario(); // ✅ Limpa ao sair
+                  Navigator.pop(context);
+                },
               ),
             ),
             body: SingleChildScrollView(
@@ -81,8 +115,8 @@ class CadastrarAtendimentoView extends StatelessWidget {
                             borderRadius: BorderRadius.circular(3),
                             image: state.imagemSelecionada != null
                                 ? DecorationImage(
-                                    image:
-                                        FileImage(File(state.imagemSelecionada!)),
+                                    image: FileImage(
+                                        File(state.imagemSelecionada!)),
                                     fit: BoxFit.cover,
                                   )
                                 : null,
@@ -117,7 +151,7 @@ class CadastrarAtendimentoView extends StatelessWidget {
                   _inputCampoBotao(
                     label: "Hora do Serviço",
                     value: state.horaSelecionada != null
-                        ? "${state.horaSelecionada!.hour.toString().padLeft(2, '0')}:${state.horaSelecionada!.minute.toString().padLeft(2, '0')}"
+                        ? "${state.horaSelecionada!.day.toString().padLeft(2, '0')}/${state.horaSelecionada!.month.toString().padLeft(2, '0')}/${state.horaSelecionada!.year} ${state.horaSelecionada!.hour.toString().padLeft(2, '0')}:${state.horaSelecionada!.minute.toString().padLeft(2, '0')}"
                         : "Selecionar",
                     onTap: selecionarHora,
                   ),
@@ -126,7 +160,7 @@ class CadastrarAtendimentoView extends StatelessWidget {
                   // Status
                   DropdownButtonFormField<int>(
                     decoration: _input("Status"),
-                    initialValue:  state.statusSelecionado,
+                    value: state.statusSelecionado,
                     items: const [
                       DropdownMenuItem(value: 0, child: Text("Pendente")),
                       DropdownMenuItem(value: 1, child: Text("Aguardo")),
@@ -134,11 +168,11 @@ class CadastrarAtendimentoView extends StatelessWidget {
                       DropdownMenuItem(value: 3, child: Text("Inativo")),
                     ],
                     onChanged: (value) =>
-                        controller.atualizarStatus(value ?? 1),
+                        controller.atualizarStatus(value ?? 0),
                   ),
                   const SizedBox(height: 30),
 
-                  // Botão salvar
+                  // ✅ Botão dinâmico (Salvar ou Atualizar)
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -149,18 +183,58 @@ class CadastrarAtendimentoView extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12)),
                       ),
                       onPressed: () async {
-                        await controller.postCadastro(AtendimentoModel(
+                        // ✅ Validação básica
+                        if (state.nome.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Nome é obrigatório')),
+                          );
+                          return;
+                        }
+
+                        if (state.horaSelecionada == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Hora é obrigatória')),
+                          );
+                          return;
+                        }
+
+                        final atendimento = AtendimentoModel(
+                          id: widget.atendimentoParaEditar?.id, // ✅ Mantém ID se for edição
                           foto: state.imagemSelecionada,
                           nome: state.nome,
-                          descricao: state.descricao,
+                          descricao: state.descricao.isEmpty ? null : state.descricao,
                           data: state.horaSelecionada!,
                           status: state.statusSelecionado,
-                        ));
-                        Navigator.pop(context);
+                        );
+
+                        // ✅ Decide entre POST ou PUT
+                        if (isEdicao) {
+                          await controller.putAtendimento(
+                            atendimento,
+                            widget.atendimentoParaEditar!.id!,
+                          );
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Atendimento atualizado!')),
+                            );
+                          }
+                        } else {
+                          await controller.postCadastro(atendimento);
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Atendimento criado!')),
+                            );
+                          }
+                        }
+
+                        if (context.mounted) {
+                          controller.limparFormulario();
+                          Navigator.pop(context);
+                        }
                       },
-                      child: const Text(
-                        "Salvar Atendimento",
-                        style: TextStyle(
+                      child: Text(
+                        isEdicao ? "Atualizar Atendimento" : "Salvar Atendimento", // ✅ Texto dinâmico
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.bold),
@@ -183,10 +257,11 @@ class CadastrarAtendimentoView extends StatelessWidget {
         fillColor: Colors.white,
       );
 
-  Widget _inputCampoBotao(
-          {required String label,
-          required String value,
-          required Function() onTap}) =>
+  Widget _inputCampoBotao({
+    required String label,
+    required String value,
+    required Function() onTap,
+  }) =>
       InkWell(
         onTap: onTap,
         child: Container(
@@ -205,41 +280,41 @@ class CadastrarAtendimentoView extends StatelessWidget {
           ),
         ),
       );
-      Future<DateTime?> dateTimePicker({
-        required BuildContext context,
-        DateTime? initialDate,
-        DateTime? firstDate,
-        DateTime? lastDate,
-      }) async {
-        initialDate ??= DateTime.now();
-        firstDate ??= initialDate.subtract(const Duration(days: 365 * 100));
-        lastDate ??= firstDate.add(const Duration(days: 365 * 200));
 
-        final DateTime? selectedDate = await showDatePicker(
-          context: context,
-          initialDate: initialDate,
-          firstDate: firstDate,
-          lastDate: lastDate,
-        );
+  Future<DateTime?> dateTimePicker({
+    required BuildContext context,
+    DateTime? initialDate,
+    DateTime? firstDate,
+    DateTime? lastDate,
+  }) async {
+    initialDate ??= DateTime.now();
+    firstDate ??= initialDate.subtract(const Duration(days: 365 * 100));
+    lastDate ??= firstDate.add(const Duration(days: 365 * 200));
 
-        if (selectedDate == null) return null;
+    final DateTime? selectedDate = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: firstDate,
+      lastDate: lastDate,
+    );
 
-        if (!context.mounted) return selectedDate;
+    if (selectedDate == null) return null;
 
-        final TimeOfDay? selectedTime = await showTimePicker(
-          context: context,
-          initialTime: TimeOfDay.fromDateTime(initialDate),
-        );
+    if (!context.mounted) return selectedDate;
 
-        return selectedTime == null
-            ? selectedDate
-            : DateTime(
-                selectedDate.year,
-                selectedDate.month,
-                selectedDate.day,
-                selectedTime.hour,
-                selectedTime.minute,
-              );
-      }
+    final TimeOfDay? selectedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(initialDate),
+    );
 
+    return selectedTime == null
+        ? selectedDate
+        : DateTime(
+            selectedDate.year,
+            selectedDate.month,
+            selectedDate.day,
+            selectedTime.hour,
+            selectedTime.minute,
+          );
+  }
 }

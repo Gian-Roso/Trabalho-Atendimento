@@ -39,15 +39,23 @@ class AtendimentoModel {
   }
 
   // Conversão para Map (para banco/API)
-  Map<String, dynamic> toMap() => {
-        'id': id,
-        'nome': nome,
-        'data': data.toIso8601String(),
-        'criado_em': criadoEm?.toIso8601String(),
-        'descricao': descricao,
-        'status': status,
-        'foto': foto,
-      };
+    Map<String, dynamic> toMap({bool incluirCriadoEm = true}) {
+    final map = {
+      'id': id,
+      'nome': nome,
+      'data': data.toIso8601String(),
+      'descricao': descricao,
+      'status': status,
+      'foto': foto,
+    };
+    
+    // Só inclui criado_em se não for null (para updates)
+    if (incluirCriadoEm && criadoEm != null) {
+      map['criado_em'] = criadoEm!.toIso8601String();
+    }
+    
+    return map;
+  }
 
   // Conversão de Map para Model
   factory AtendimentoModel.fromMap(Map<String, dynamic> map) {

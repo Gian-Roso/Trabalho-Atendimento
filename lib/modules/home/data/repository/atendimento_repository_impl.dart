@@ -33,18 +33,25 @@ class AtendimentoRepositoryImpl implements AtendimentoRepository{
 
 
   @override
-  Future<void> postAtendimento(AtendimentoModel atendimentoModel) async {
-   final db = await dbProvider.database;
-   await db.insert('atendimento', atendimentoModel.toMap());
-   return;
+  Future<AtendimentoModel> postAtendimento(AtendimentoModel atendimentoModel) async {
+    final db = await dbProvider.database;
+    
+    final map = atendimentoModel.toMap();
+    map.remove('id');
+    map.remove('criado_em'); 
+    
+    final id = await db.insert('atendimento', map);
+    
+    final result = await db.query('atendimento', where: 'id = ?', whereArgs: [id]);
+    return AtendimentoModel.fromMap(result.first);
   }
 
   @override
-  Future<void> putAtendimento(AtendimentoModel atendimentoModel, int id) async {
+  Future<AtendimentoModel> putAtendimento(AtendimentoModel atendimentoModel, int id) async {
     final db = await dbProvider.database;
     await db.update('atendimento', atendimentoModel.toMap(),
-    where: 'id = ?',whereArgs: [id]);
-   return;
+        where: 'id = ?', whereArgs: [id]);
+    return atendimentoModel.copyWith(id: id);
   }
     @override
   Future<void> deleteAtendimento(int id) async {
