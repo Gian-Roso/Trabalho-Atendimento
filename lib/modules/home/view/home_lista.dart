@@ -9,8 +9,9 @@ class HomeLista extends StatelessWidget {
   final void Function(AtendimentoModel atendimento,int value) editF;
   final void Function(AtendimentoModel atendimento, int value) inativF;
   final void Function(int value) detalharF;
+  final void Function(AtendimentoModel atendimento,int value) concluirF;
 
-  const HomeLista({super.key, this.atendimento, required this.reloadFunction, required this.deleteF, required this.editF, required this.inativF, required this.detalharF});
+  const HomeLista({super.key, this.atendimento, required this.reloadFunction, required this.deleteF, required this.editF, required this.inativF, required this.detalharF, required this.concluirF});
   final Function reloadFunction;
 
   @override
@@ -43,7 +44,8 @@ class HomeLista extends StatelessWidget {
               deleteF: deleteF, 
               editF: editF, 
               inativF: inativF, 
-              detalharF: detalharF
+              detalharF: detalharF,
+              concluirF: concluirF,
             );
           },
           itemCount: atendimento!.length,

@@ -10,8 +10,9 @@ class CardLista extends StatelessWidget {
   final void Function(AtendimentoModel atendimento,int value) editF;
   final void Function(AtendimentoModel atendimento, int value) inativF;
   final void Function(int value) detalharF;
+  final void Function(AtendimentoModel atendimento,int value) concluirF;
   
-  CardLista({super.key, required this.atendimentoCard, required this.deleteF, required this.editF, required this.inativF, required this.detalharF});
+  CardLista({super.key, required this.atendimentoCard, required this.deleteF, required this.editF, required this.inativF, required this.detalharF, required this.concluirF});
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +54,7 @@ class CardLista extends StatelessWidget {
                         StatusChip(status: atendimentoCard.status),
                         OptionsMenu(
                           onSelected: (value) {
-                          }, deleteF: deleteF, editF: editF, inativF: inativF, detalharF: detalharF, atendimento: atendimentoCard,
+                          }, deleteF: deleteF, editF: editF, inativF: inativF, detalharF: detalharF, atendimento: atendimentoCard, concluirF: concluirF,
                         ),
                       ],
                     ),

@@ -23,7 +23,7 @@ class HomeView extends StatelessWidget {
                 return state is HomeCarregado ?
                 HomeLista(atendimento:state.atendimentos, reloadFunction: () async {
                   controller.getAtendimentos();
-                }, deleteF: controller.deleteAtendimento, editF: controller.putAtendimento, inativF: controller.putAtendimento, detalharF: controller.getAtendimento,) :
+                }, deleteF: controller.deleteAtendimento, editF: controller.putAtendimento, inativF: controller.putAtendimento, detalharF: controller.getAtendimento, concluirF: controller.putAtendimento) :
                 Center(
                   child: CircularProgressIndicator(),
                 );

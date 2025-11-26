@@ -8,6 +8,7 @@ class OptionsMenu extends StatelessWidget {
   final void Function(AtendimentoModel atendimento, int value) editF;
   final void Function(AtendimentoModel atendimento, int value) inativF;
   final void Function(int value) detalharF;
+  final void Function(AtendimentoModel atendimento,int value) concluirF;
   final AtendimentoModel atendimento;
 
   const OptionsMenu({
@@ -18,6 +19,7 @@ class OptionsMenu extends StatelessWidget {
     required this.inativF,
     required this.detalharF,
     required this.atendimento,
+    required this.concluirF
   });
 
   @override
@@ -72,22 +74,21 @@ class OptionsMenu extends StatelessWidget {
           value: 3,
           onTap: () {
             if (atendimento.id != null) {
-              final atendimentoInativo = atendimento.copyWith(status: 2); // Status 2 = Inativo
-              inativF(atendimentoInativo, atendimento.id!);
+              final atendimentoconcluido = atendimento.copyWith(status: 2); 
+              concluirF(atendimentoconcluido, atendimento.id!);
             }
           },
           child: Row(
             children: const [
-              Icon(Icons.block, size: 18),
+              Icon(Icons.check, size: 18),
               SizedBox(width: 8),
-              Text("Inativar"),
+              Text("Concluir"),
             ],
           ),
         ),
         PopupMenuItem(
           value: 4,
           onTap: () async {
-            // Deletar
             if (atendimento.id != null) {
               await deleteF(atendimento.id!);
             }
@@ -100,6 +101,22 @@ class OptionsMenu extends StatelessWidget {
                 "Excluir",
                 style: TextStyle(color: Colors.red),
               ),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: 5,
+          onTap: () {
+            if (atendimento.id != null) {
+              final atendimentoInativo = atendimento.copyWith(status: 3); 
+              inativF(atendimentoInativo, atendimento.id!);
+            }
+          },
+          child: Row(
+            children: const [
+              Icon(Icons.block, size: 18),
+              SizedBox(width: 8),
+              Text("Inativar"),
             ],
           ),
         ),
