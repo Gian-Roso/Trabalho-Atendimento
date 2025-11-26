@@ -1,44 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trabfinal/modules/home/controller/lista_controller.dart';
 import 'package:trabfinal/modules/home/core/domain/model/atendimento_model.dart';
 import 'package:trabfinal/modules/home/view/pages/cadastrar_atendimento_view.dart';
+import 'package:trabfinal/modules/home/view/pages/detalhes_atendimento_view.dart';
 
 class OptionsMenu extends StatelessWidget {
-  final void Function(int value)? onSelected;
-  final Future<void> Function(int value) deleteF;
-  final void Function(AtendimentoModel atendimento, int value) editF;
-  final void Function(AtendimentoModel atendimento, int value) inativF;
-  final void Function(int value) detalharF;
-  final void Function(AtendimentoModel atendimento,int value) concluirF;
   final AtendimentoModel atendimento;
 
   const OptionsMenu({
     super.key,
-    this.onSelected,
-    required this.deleteF,
-    required this.editF,
-    required this.inativF,
-    required this.detalharF,
     required this.atendimento,
-    required this.concluirF
   });
 
   @override
   Widget build(BuildContext context) {
+    final controller = context.read<ListaController>();
+
     return PopupMenuButton<int>(
       icon: const Icon(Icons.more_vert),
-      onSelected: (value) {
-        if (onSelected != null) {
-          onSelected!(value);
-        }
-      },
       itemBuilder: (context) => [
         PopupMenuItem(
           value: 1,
-          onTap: () {
-            if (atendimento.id != null) {
-              detalharF(atendimento.id!);
-            }
-          },
           child: Row(
             children: const [
               Icon(Icons.visibility, size: 18),
@@ -49,19 +32,6 @@ class OptionsMenu extends StatelessWidget {
         ),
         PopupMenuItem(
           value: 2,
-          onTap: () async {
-            await Future.delayed(Duration.zero);
-            if (context.mounted) {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => CadastrarAtendimentoView(
-                    atendimentoParaEditar: atendimento, 
-                  ),
-                ),
-              );
-            }
-          },
           child: Row(
             children: const [
               Icon(Icons.edit, size: 18),
@@ -72,15 +42,9 @@ class OptionsMenu extends StatelessWidget {
         ),
         PopupMenuItem(
           value: 3,
-          onTap: () {
-            if (atendimento.id != null) {
-              final atendimentoconcluido = atendimento.copyWith(status: 2); 
-              concluirF(atendimentoconcluido, atendimento.id!);
-            }
-          },
           child: Row(
             children: const [
-              Icon(Icons.check, size: 18),
+              Icon(Icons.check, size: 18, color: Colors.green),
               SizedBox(width: 8),
               Text("Concluir"),
             ],
@@ -88,11 +52,16 @@ class OptionsMenu extends StatelessWidget {
         ),
         PopupMenuItem(
           value: 4,
-          onTap: () async {
-            if (atendimento.id != null) {
-              await deleteF(atendimento.id!);
-            }
-          },
+          child: Row(
+            children: const [
+              Icon(Icons.block, size: 18),
+              SizedBox(width: 8),
+              Text("Inativar"),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: 5,
           child: Row(
             children: const [
               Icon(Icons.delete, size: 18, color: Colors.red),
@@ -104,23 +73,66 @@ class OptionsMenu extends StatelessWidget {
             ],
           ),
         ),
-        PopupMenuItem(
-          value: 5,
-          onTap: () {
-            if (atendimento.id != null) {
-              final atendimentoInativo = atendimento.copyWith(status: 3); 
-              inativF(atendimentoInativo, atendimento.id!);
-            }
-          },
-          child: Row(
-            children: const [
-              Icon(Icons.block, size: 18),
-              SizedBox(width: 8),
-              Text("Inativar"),
-            ],
-          ),
-        ),
       ],
+      onSelected: (value) async {
+        switch (value) {
+          case 1: // Ver detalhes
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => DetalhesAtendimentoView(
+                  atendimento: atendimento,
+                ),
+              ),
+            );
+            break;
+
+          case 2: // Editar
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => CadastrarAtendimentoView(
+                  atendimentoParaEditar: atendimento,
+                ),
+              ),
+            );
+            controller.carregarAtendimentos();
+            break;
+
+          case 3: // Concluir
+            await controller.concluirAtendimento(atendimento);
+            break;
+
+          case 4: // Inativar
+            await controller.inativarAtendimento(atendimento);
+            break;
+
+          case 5: // Excluir
+            final confirma = await showDialog<bool>(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text('Confirmar Exclusão'),
+                content: Text('Deseja excluir "${atendimento.nome}"?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: Text('Cancelar'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    child: Text('Excluir',
+                        style: TextStyle(color: Colors.red)),
+                  ),
+                ],
+              ),
+            );
+
+            if (confirma == true && atendimento.id != null) {
+              await controller.deletarAtendimento(atendimento.id!);
+            }
+            break;
+        }
+      },
     );
   }
 }
