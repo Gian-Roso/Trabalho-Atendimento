@@ -39,7 +39,7 @@ class HomeLista extends StatelessWidget {
         child: ListView.builder(
           itemBuilder: (context, index) {
             return CardLista(
-              atendimentoCard: atendimento![index], // ✅ Passa o modelo completo com ID
+              atendimentoCard: atendimento![index], 
               deleteF: deleteF, 
               editF: editF, 
               inativF: inativF, 

@@ -33,7 +33,6 @@ class OptionsMenu extends StatelessWidget {
         PopupMenuItem(
           value: 1,
           onTap: () {
-            // Ver detalhes
             if (atendimento.id != null) {
               detalharF(atendimento.id!);
             }
@@ -49,14 +48,13 @@ class OptionsMenu extends StatelessWidget {
         PopupMenuItem(
           value: 2,
           onTap: () async {
-            // Editar - abre a tela de cadastro com os dados
-            await Future.delayed(Duration.zero); // Fix para navegação em PopupMenu
+            await Future.delayed(Duration.zero);
             if (context.mounted) {
               await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (_) => CadastrarAtendimentoView(
-                    atendimentoParaEditar: atendimento, // ✅ Passa o atendimento
+                    atendimentoParaEditar: atendimento, 
                   ),
                 ),
               );
@@ -73,7 +71,6 @@ class OptionsMenu extends StatelessWidget {
         PopupMenuItem(
           value: 3,
           onTap: () {
-            // Inativar (muda status para inativo)
             if (atendimento.id != null) {
               final atendimentoInativo = atendimento.copyWith(status: 2); // Status 2 = Inativo
               inativF(atendimentoInativo, atendimento.id!);

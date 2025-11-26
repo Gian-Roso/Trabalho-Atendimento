@@ -10,8 +10,6 @@ class CadastroController extends Cubit<CadastroState> {
 
   CadastroController(this.atendimentoUsecase) : super(CadastroNovo());
 
-  // ================= Atualizações individuais =================
-
   void atualizarNome(String nome) {
     emit(state.copyWith(nome: nome));
   }
@@ -35,7 +33,6 @@ class CadastroController extends Cubit<CadastroState> {
     emit(CadastroAtualizar(atendimento));
   }
 
-  // ✅ NOVO: Método para limpar formulário
   void limparFormulario() {
     emit(CadastroNovo());
   }

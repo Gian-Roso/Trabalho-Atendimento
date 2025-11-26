@@ -8,11 +8,11 @@ import 'package:trabfinal/modules/home/core/domain/model/atendimento_model.dart'
 import 'package:trabfinal/modules/home/state/cadastro_state.dart';
 
 class CadastrarAtendimentoView extends StatefulWidget {
-  final AtendimentoModel? atendimentoParaEditar; // ✅ Parâmetro opcional
+  final AtendimentoModel? atendimentoParaEditar;
 
   const CadastrarAtendimentoView({
     super.key,
-    this.atendimentoParaEditar, // ✅ Para edição
+    this.atendimentoParaEditar,
   });
 
   @override
@@ -28,11 +28,9 @@ class _CadastrarAtendimentoViewState extends State<CadastrarAtendimentoView> {
   void initState() {
     super.initState();
     
-    // ✅ Se tem atendimento para editar, carrega os dados
     if (widget.atendimentoParaEditar != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         controller.carregarAtendimento(widget.atendimentoParaEditar!);
-        // ✅ Preenche os TextControllers
         nomeController.text = widget.atendimentoParaEditar!.nome;
         descricaoController.text = widget.atendimentoParaEditar!.descricao ?? '';
       });
@@ -48,7 +46,7 @@ class _CadastrarAtendimentoViewState extends State<CadastrarAtendimentoView> {
 
   @override
   Widget build(BuildContext context) {
-    final isEdicao = widget.atendimentoParaEditar != null; // ✅ Verifica se é edição
+    final isEdicao = widget.atendimentoParaEditar != null;
 
     return BlocProvider.value(
       value: controller,
@@ -79,14 +77,14 @@ class _CadastrarAtendimentoViewState extends State<CadastrarAtendimentoView> {
             backgroundColor: const Color(0xFFF3F3F3),
             appBar: AppBar(
               title: Text(
-                isEdicao ? "Editar Atendimento" : "Novo Atendimento", // ✅ Título dinâmico
+                isEdicao ? "Editar Atendimento" : "Novo Atendimento", 
                 style: const TextStyle(color: Colors.white),
               ),
               backgroundColor: const Color(0xFF1A1A1A),
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back, color: Colors.white),
                 onPressed: () {
-                  controller.limparFormulario(); // ✅ Limpa ao sair
+                  controller.limparFormulario(); 
                   Navigator.pop(context);
                 },
               ),
@@ -157,7 +155,6 @@ class _CadastrarAtendimentoViewState extends State<CadastrarAtendimentoView> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Status
                   DropdownButtonFormField<int>(
                     decoration: _input("Status"),
                     value: state.statusSelecionado,
@@ -172,7 +169,6 @@ class _CadastrarAtendimentoViewState extends State<CadastrarAtendimentoView> {
                   ),
                   const SizedBox(height: 30),
 
-                  // ✅ Botão dinâmico (Salvar ou Atualizar)
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -183,7 +179,6 @@ class _CadastrarAtendimentoViewState extends State<CadastrarAtendimentoView> {
                             borderRadius: BorderRadius.circular(12)),
                       ),
                       onPressed: () async {
-                        // ✅ Validação básica
                         if (state.nome.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Nome é obrigatório')),
@@ -199,7 +194,7 @@ class _CadastrarAtendimentoViewState extends State<CadastrarAtendimentoView> {
                         }
 
                         final atendimento = AtendimentoModel(
-                          id: widget.atendimentoParaEditar?.id, // ✅ Mantém ID se for edição
+                          id: widget.atendimentoParaEditar?.id, 
                           foto: state.imagemSelecionada,
                           nome: state.nome,
                           descricao: state.descricao.isEmpty ? null : state.descricao,
@@ -207,7 +202,6 @@ class _CadastrarAtendimentoViewState extends State<CadastrarAtendimentoView> {
                           status: state.statusSelecionado,
                         );
 
-                        // ✅ Decide entre POST ou PUT
                         if (isEdicao) {
                           await controller.putAtendimento(
                             atendimento,
@@ -233,7 +227,7 @@ class _CadastrarAtendimentoViewState extends State<CadastrarAtendimentoView> {
                         }
                       },
                       child: Text(
-                        isEdicao ? "Atualizar Atendimento" : "Salvar Atendimento", // ✅ Texto dinâmico
+                        isEdicao ? "Atualizar Atendimento" : "Salvar Atendimento", 
                         style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,

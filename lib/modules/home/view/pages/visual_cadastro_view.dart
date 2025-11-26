@@ -19,7 +19,6 @@ class DetalhesAtendimentoView extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // Card principal
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -32,7 +31,6 @@ class DetalhesAtendimentoView extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Título e Status
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -48,8 +46,6 @@ class DetalhesAtendimentoView extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 16),
-
-                  // Descrição
                   const Row(
                     children: [
                       Icon(Icons.description, size: 18),
@@ -60,8 +56,6 @@ class DetalhesAtendimentoView extends StatelessWidget {
                   const SizedBox(height: 4),
                   const Text("Verificação completa dos equipamentos"),
                   const SizedBox(height: 16),
-
-                  // Cliente
                   const Row(
                     children: [
                       Icon(Icons.person, size: 18),
@@ -99,8 +93,6 @@ class DetalhesAtendimentoView extends StatelessWidget {
             ),
 
             const SizedBox(height: 16),
-
-            // Informações adicionais
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(

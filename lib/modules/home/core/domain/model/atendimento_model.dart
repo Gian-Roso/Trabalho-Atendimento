@@ -38,7 +38,6 @@ class AtendimentoModel {
     );
   }
 
-  // Conversão para Map (para banco/API)
     Map<String, dynamic> toMap({bool incluirCriadoEm = true}) {
     final map = {
       'id': id,
@@ -49,7 +48,6 @@ class AtendimentoModel {
       'foto': foto,
     };
     
-    // Só inclui criado_em se não for null (para updates)
     if (incluirCriadoEm && criadoEm != null) {
       map['criado_em'] = criadoEm!.toIso8601String();
     }
@@ -57,7 +55,6 @@ class AtendimentoModel {
     return map;
   }
 
-  // Conversão de Map para Model
   factory AtendimentoModel.fromMap(Map<String, dynamic> map) {
     return AtendimentoModel(
       id: map['id'],

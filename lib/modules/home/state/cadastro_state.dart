@@ -15,7 +15,6 @@ abstract class CadastroState {
     this.descricao = "",
   });
 
-  // Cria uma cópia do estado atual com alterações
   CadastroState copyWith({
     DateTime? horaSelecionada,
     int? statusSelecionado,
@@ -25,7 +24,6 @@ abstract class CadastroState {
   });
 }
 
-// Estado de cadastro novo
 class CadastroNovo extends CadastroState {
   CadastroNovo({
     DateTime? horaSelecionada,
@@ -59,7 +57,6 @@ class CadastroNovo extends CadastroState {
   }
 }
 
-// Estado de cadastro atualizado (vindo de um atendimento existente)
 class CadastroAtualizar extends CadastroState {
   final AtendimentoModel cadastro;
 
