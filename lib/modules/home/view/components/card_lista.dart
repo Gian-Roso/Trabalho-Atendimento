@@ -15,7 +15,7 @@ class CardLista extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.read<ListaController>();
+    context.read<ListaController>();
 
     return Center(
       child: Padding(

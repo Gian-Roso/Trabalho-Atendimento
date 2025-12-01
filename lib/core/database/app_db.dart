@@ -11,13 +11,14 @@ class AppDB {
     if (_db != null) return _db!;
     return await _initDatabase();
   }
-   Future<Database> _initDatabase() async {
+  
+  Future<Database> _initDatabase() async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'app.db');
 
     _db = await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onConfigure: (db) async {
         await db.execute('PRAGMA foreign_keys = ON');
       },
@@ -29,11 +30,14 @@ class AppDB {
   }
 
   Future<void> _onCreate(Database db, int version) async {
-    await _runMigrations(db, 1);
+    await _runMigrations(db, version);
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    await _runMigrations(db, newVersion);
+    if (oldVersion < 2) {
+      await db.execute('ALTER TABLE atendimento ADD COLUMN nome_cliente TEXT');
+      await db.execute('ALTER TABLE atendimento ADD COLUMN foto_finalizacao TEXT');
+    }
   }
 
   Future<void> _runMigrations(Database db, int version) async {

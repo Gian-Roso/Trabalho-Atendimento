@@ -30,7 +30,7 @@ class DetalhesAtendimentoView extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // Card Principal
+
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -47,7 +47,7 @@ class DetalhesAtendimentoView extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Nome e Status
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -63,9 +63,35 @@ class DetalhesAtendimentoView extends StatelessWidget {
                       StatusChip(status: atendimento.status),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 5),
+                  Row(
+                    children: [
+                      const Icon(Icons.person, size: 20),
+                      const SizedBox(width: 1),
 
-                  // Foto (se houver)
+                      const Text(
+                        "Cliente:",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      const SizedBox(width: 6),
+
+                      Expanded(
+                        child: Text(
+                          atendimento.nomeCliente ?? "Sem nome",
+                          style: const TextStyle(
+                            color: Color(0xFF000000),
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+
                   if (atendimento.foto != null) ...[
                     const Row(
                       children: [
@@ -83,14 +109,13 @@ class DetalhesAtendimentoView extends StatelessWidget {
                       child: Image.file(
                         File(atendimento.foto!),
                         width: double.infinity,
-                        height: 200,
+                        height: 300,
                         fit: BoxFit.cover,
                       ),
                     ),
                     const SizedBox(height: 20),
                   ],
 
-                  // Descrição
                   const Row(
                     children: [
                       Icon(Icons.description, size: 18),
@@ -106,9 +131,8 @@ class DetalhesAtendimentoView extends StatelessWidget {
                     atendimento.descricao ?? "Sem descrição",
                     style: TextStyle(color: Colors.grey[700]),
                   ),
-                  const SizedBox(height: 20),
-
-                  // Data e Hora
+                  const SizedBox(height: 10),
+                  
                   const Row(
                     children: [
                       Icon(Icons.event, size: 18),
@@ -138,7 +162,6 @@ class DetalhesAtendimentoView extends StatelessWidget {
                     ],
                   ),
 
-                  // Verifica se está atrasado
                   if (atendimento.data.isBefore(DateTime.now()) &&
                       atendimento.status == 0) ...[
                     const SizedBox(height: 8),
@@ -173,7 +196,6 @@ class DetalhesAtendimentoView extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            // Card de Informações Adicionais
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -211,6 +233,33 @@ class DetalhesAtendimentoView extends StatelessWidget {
                       StatusChip(status: atendimento.status),
                     ],
                   ),
+                  if (atendimento.fotoFinalizacao != null) ...[
+                    const SizedBox(height: 20),
+
+                    const Row(
+                      children: [
+                        Icon(Icons.photo, size: 18),
+                        SizedBox(width: 6),
+                        Text(
+                          "Foto do Serviço Finalizado",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.file(
+                        File(atendimento.fotoFinalizacao!),
+                        width: double.infinity,
+                        height: 300,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                  ],
                 ],
               ),
             ),

@@ -14,12 +14,20 @@ class CadastroController extends Cubit<CadastroState> {
     emit(state.copyWith(nome: nome));
   }
 
+  void atualizarNomeCliente(String nomeCliente) { 
+    emit(state.copyWith(nomeCliente: nomeCliente));
+  }
+
   void atualizarDescricao(String descricao) {
     emit(state.copyWith(descricao: descricao));
   }
 
   void atualizarImagem(String path) {
     emit(state.copyWith(imagemSelecionada: path));
+  }
+
+  void atualizarImagemFinalizacao(String path) {
+    emit(state.copyWith(imagemFinalizacao: path));
   }
 
   void atualizarHora(DateTime hora) {
@@ -29,7 +37,8 @@ class CadastroController extends Cubit<CadastroState> {
   void atualizarStatus(int status) {
     emit(state.copyWith(statusSelecionado: status));
   }
-   void carregarAtendimento(AtendimentoModel atendimento) {
+
+  void carregarAtendimento(AtendimentoModel atendimento) {
     emit(CadastroAtualizar(atendimento));
   }
 
@@ -38,9 +47,9 @@ class CadastroController extends Cubit<CadastroState> {
   }
 
   Future<AtendimentoModel> postCadastro(AtendimentoModel atendimentoModel) async {
-  final atendimentoSalvo = await atendimentoUsecase.postAtendimento(atendimentoModel);
-  emit(CadastroNovo());
-  return atendimentoSalvo; 
+    final atendimentoSalvo = await atendimentoUsecase.postAtendimento(atendimentoModel);
+    emit(CadastroNovo());
+    return atendimentoSalvo; 
   }
 
   Future<void> putAtendimento(AtendimentoModel atendimentoModel, int id) async {

@@ -23,6 +23,7 @@ class _CadastrarAtendimentoViewState extends State<CadastrarAtendimentoView> {
   final controller = getIt<CadastroController>();
   final TextEditingController nomeController = TextEditingController();
   final TextEditingController descricaoController = TextEditingController();
+  final TextEditingController nomeClienteController = TextEditingController();
 
   @override
   void initState() {
@@ -33,6 +34,7 @@ class _CadastrarAtendimentoViewState extends State<CadastrarAtendimentoView> {
         controller.carregarAtendimento(widget.atendimentoParaEditar!);
         nomeController.text = widget.atendimentoParaEditar!.nome;
         descricaoController.text = widget.atendimentoParaEditar!.descricao ?? '';
+        nomeClienteController.text = widget.atendimentoParaEditar?.nomeCliente ?? '';
       });
     }
   }
@@ -41,6 +43,7 @@ class _CadastrarAtendimentoViewState extends State<CadastrarAtendimentoView> {
   void dispose() {
     nomeController.dispose();
     descricaoController.dispose();
+    nomeClienteController.dispose();
     super.dispose();
   }
 
@@ -129,15 +132,20 @@ class _CadastrarAtendimentoViewState extends State<CadastrarAtendimentoView> {
                     ),
                   ),
 
-                  // Nome
                   TextField(
                     controller: nomeController,
                     onChanged: (value) => controller.atualizarNome(value),
+                    decoration: _input("Nome Serviço"),
+                  ),
+                  const SizedBox(height: 16),
+                  // Nome do Cliente
+                  TextField(
+                    controller: nomeClienteController, 
+                    onChanged: (value) => controller.atualizarNomeCliente(value),
                     decoration: _input("Nome do Cliente"),
                   ),
                   const SizedBox(height: 16),
 
-                  // Descrição
                   TextField(
                     controller: descricaoController,
                     maxLines: 3,
@@ -157,7 +165,7 @@ class _CadastrarAtendimentoViewState extends State<CadastrarAtendimentoView> {
 
                   DropdownButtonFormField<int>(
                     decoration: _input("Status"),
-                    value: state.statusSelecionado,
+                    initialValue: state.statusSelecionado,
                     items: const [
                       DropdownMenuItem(value: 0, child: Text("Pendente")),
                       DropdownMenuItem(value: 1, child: Text("Aguardo")),
@@ -194,9 +202,10 @@ class _CadastrarAtendimentoViewState extends State<CadastrarAtendimentoView> {
                         }
 
                         final atendimento = AtendimentoModel(
-                          id: widget.atendimentoParaEditar?.id, 
+                          id: widget.atendimentoParaEditar?.id,
                           foto: state.imagemSelecionada,
                           nome: state.nome,
+                          nomeCliente: state.nomeCliente.isEmpty ? null : state.nomeCliente,
                           descricao: state.descricao.isEmpty ? null : state.descricao,
                           data: state.horaSelecionada!,
                           status: state.statusSelecionado,

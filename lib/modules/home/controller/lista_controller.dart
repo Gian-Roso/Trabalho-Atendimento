@@ -12,8 +12,6 @@ class ListaController extends Cubit<ListaState> {
     carregarAtendimentos();
   }
 
-  // ================= CARREGAR =================
-  
   Future<void> carregarAtendimentos() async {
     emit(ListaCarregando());
     try {
@@ -24,37 +22,18 @@ class ListaController extends Cubit<ListaState> {
     }
   }
 
-  // ================= DELETAR =================
-  
   Future<void> deletarAtendimento(int id) async {
     try {
       await atendimentoUsecase.deleteAtendimento(id);
       await carregarAtendimentos();
       emit(ListaOperacaoSucesso('Atendimento excluído com sucesso!'));
-      await carregarAtendimentos(); // Recarrega para voltar ao estado normal
+      await carregarAtendimentos();
     } catch (e) {
       emit(ListaErro('Erro ao deletar: $e'));
       await carregarAtendimentos();
     }
   }
 
-  Future<void> deletarSelecionados(Set<int> ids) async {
-    emit(ListaCarregando());
-    try {
-      for (final id in ids) {
-        await atendimentoUsecase.deleteAtendimento(id);
-      }
-      await carregarAtendimentos();
-      emit(ListaOperacaoSucesso('${ids.length} atendimento(s) excluído(s)!'));
-      await carregarAtendimentos();
-    } catch (e) {
-      emit(ListaErro('Erro ao deletar selecionados: $e'));
-      await carregarAtendimentos();
-    }
-  }
-
-  // ================= ATUALIZAR =================
-  
   Future<void> atualizarAtendimento(AtendimentoModel atendimento) async {
     if (atendimento.id == null) return;
     
@@ -68,11 +47,16 @@ class ListaController extends Cubit<ListaState> {
       await carregarAtendimentos();
     }
   }
-
-  Future<void> concluirAtendimento(AtendimentoModel atendimento) async {
+  Future<void> concluirAtendimentoComFoto(
+    AtendimentoModel atendimento,
+    String fotoFinalizacao,
+  ) async {
     if (atendimento.id == null) return;
     
-    final atendimentoConcluido = atendimento.copyWith(status: 2);
+    final atendimentoConcluido = atendimento.copyWith(
+      status: 2,
+      fotoFinalizacao: fotoFinalizacao,
+    );
     await atualizarAtendimento(atendimentoConcluido);
   }
 
@@ -82,77 +66,50 @@ class ListaController extends Cubit<ListaState> {
     final atendimentoInativo = atendimento.copyWith(status: 3);
     await atualizarAtendimento(atendimentoInativo);
   }
-
-  Future<void> concluirSelecionados(Set<int> ids) async {
-    if (state is! ListaCarregada) return;
-    
-    emit(ListaCarregando());
-    try {
+  
+  void aplicarFiltroStatus(int? status) {
+    if (state is ListaCarregada) {
       final estadoAtual = state as ListaCarregada;
-      for (final id in ids) {
-        final atendimento = estadoAtual.atendimentos.firstWhere((a) => a.id == id);
-        await atendimentoUsecase.putAtendimento(
-          atendimento.copyWith(status: 2),
-          id,
-        );
-      }
-      await carregarAtendimentos();
-      emit(ListaOperacaoSucesso('${ids.length} atendimento(s) concluído(s)!'));
-      await carregarAtendimentos();
-    } catch (e) {
-      emit(ListaErro('Erro ao concluir selecionados: $e'));
-      await carregarAtendimentos();
+      emit(estadoAtual.copyWith(filtroStatus: status));
     }
   }
-
-  // ================= FILTROS =================
-  
-  void aplicarFiltro(int? status) {
+  void aplicarFiltroNome(String? nome) {
+    if (state is ListaCarregada) {
+      final estadoAtual = state as ListaCarregada;
+      if (nome == null || nome.isEmpty) {
+        emit(estadoAtual.copyWith(limparFiltroNome: true));
+      } else {
+        emit(estadoAtual.copyWith(filtroNome: nome));
+      }
+    }
+  }
+  void aplicarFiltroData({
+    DateTime? dataInicio,
+    DateTime? dataFim,
+    String tipoData = 'servico', // 'servico' ou 'criacao'
+  }) {
     if (state is ListaCarregada) {
       final estadoAtual = state as ListaCarregada;
       emit(estadoAtual.copyWith(
-        filtroStatus: status,
-        itensSelecionados: {}, // Limpa seleção ao filtrar
+        filtroDataInicio: dataInicio,
+        filtroDataFim: dataFim,
+        tipoFiltroData: tipoData,
+      ));
+    }
+  }
+  void limparTodosFiltros() {
+    if (state is ListaCarregada) {
+      final estadoAtual = state as ListaCarregada;
+      emit(ListaCarregada(
+        atendimentos: estadoAtual.atendimentos,
       ));
     }
   }
 
-  void limparFiltro() {
-    aplicarFiltro(null);
-  }
-
-  // ================= SELEÇÃO =================
-  
-  void toggleSelecao(int id) {
+  void limparFiltroData() {
     if (state is ListaCarregada) {
       final estadoAtual = state as ListaCarregada;
-      final novaSelecao = Set<int>.from(estadoAtual.itensSelecionados);
-      
-      if (novaSelecao.contains(id)) {
-        novaSelecao.remove(id);
-      } else {
-        novaSelecao.add(id);
-      }
-      
-      emit(estadoAtual.copyWith(itensSelecionados: novaSelecao));
-    }
-  }
-
-  void limparSelecao() {
-    if (state is ListaCarregada) {
-      final estadoAtual = state as ListaCarregada;
-      emit(estadoAtual.copyWith(itensSelecionados: {}));
-    }
-  }
-
-  void selecionarTodos() {
-    if (state is ListaCarregada) {
-      final estadoAtual = state as ListaCarregada;
-      final todosIds = estadoAtual.atendimentosFiltrados
-          .where((a) => a.id != null)
-          .map((a) => a.id!)
-          .toSet();
-      emit(estadoAtual.copyWith(itensSelecionados: todosIds));
+      emit(estadoAtual.copyWith(limparFiltroData: true));
     }
   }
 }

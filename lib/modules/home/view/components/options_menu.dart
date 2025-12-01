@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trabfinal/modules/home/controller/lista_controller.dart';
 import 'package:trabfinal/modules/home/core/domain/model/atendimento_model.dart';
+import 'package:trabfinal/modules/home/view/components/dialog_concluir.dart';
 import 'package:trabfinal/modules/home/view/pages/cadastrar_atendimento_view.dart';
 import 'package:trabfinal/modules/home/view/pages/detalhes_atendimento_view.dart';
 
@@ -76,7 +77,7 @@ class OptionsMenu extends StatelessWidget {
       ],
       onSelected: (value) async {
         switch (value) {
-          case 1: // Ver detalhes
+          case 1:
             await Navigator.push(
               context,
               MaterialPageRoute(
@@ -87,7 +88,7 @@ class OptionsMenu extends StatelessWidget {
             );
             break;
 
-          case 2: // Editar
+          case 2:
             await Navigator.push(
               context,
               MaterialPageRoute(
@@ -99,15 +100,22 @@ class OptionsMenu extends StatelessWidget {
             controller.carregarAtendimentos();
             break;
 
-          case 3: // Concluir
-            await controller.concluirAtendimento(atendimento);
+          case 3:
+            final fotoPath = await showDialog<String>(
+              context: context,
+              builder: (_) => const DialogConcluir(),
+            );
+
+            if (fotoPath != null) {
+              await controller.concluirAtendimentoComFoto(atendimento, fotoPath);
+            }
             break;
 
-          case 4: // Inativar
+          case 4: 
             await controller.inativarAtendimento(atendimento);
             break;
 
-          case 5: // Excluir
+          case 5: 
             final confirma = await showDialog<bool>(
               context: context,
               builder: (context) => AlertDialog(

@@ -6,7 +6,7 @@ import 'package:trabfinal/modules/home/state/lista_state.dart';
 import 'package:trabfinal/modules/home/view/home_lista.dart';
 
 class HomeView extends StatelessWidget {
-  HomeView({super.key});
+  const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,6 @@ class HomeView extends StatelessWidget {
       create: (context) => getIt<ListaController>(),
       child: BlocConsumer<ListaController, ListaState>(
         listener: (context, state) {
-          // Mostra mensagens de sucesso/erro
           if (state is ListaOperacaoSucesso) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

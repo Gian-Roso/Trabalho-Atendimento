@@ -4,14 +4,18 @@ abstract class CadastroState {
   final DateTime? horaSelecionada;
   final int statusSelecionado;
   final String? imagemSelecionada;
+  final String? imagemFinalizacao; 
   final String nome;
+  final String nomeCliente; 
   final String descricao;
 
   CadastroState({
     this.horaSelecionada,
     this.statusSelecionado = 0,
     this.imagemSelecionada,
+    this.imagemFinalizacao, 
     this.nome = "",
+    this.nomeCliente = "", 
     this.descricao = "",
   });
 
@@ -19,7 +23,9 @@ abstract class CadastroState {
     DateTime? horaSelecionada,
     int? statusSelecionado,
     String? imagemSelecionada,
+    String? imagemFinalizacao, 
     String? nome,
+    String? nomeCliente, 
     String? descricao,
   });
 }
@@ -29,13 +35,17 @@ class CadastroNovo extends CadastroState {
     DateTime? horaSelecionada,
     int statusSelecionado = 0,
     String? imagemSelecionada,
+    String? imagemFinalizacao, 
     String nome = "",
+    String nomeCliente = "", 
     String descricao = "",
   }) : super(
           horaSelecionada: horaSelecionada,
           statusSelecionado: statusSelecionado,
           imagemSelecionada: imagemSelecionada,
+          imagemFinalizacao: imagemFinalizacao, 
           nome: nome,
+          nomeCliente: nomeCliente, 
           descricao: descricao,
         );
 
@@ -44,14 +54,18 @@ class CadastroNovo extends CadastroState {
     DateTime? horaSelecionada,
     int? statusSelecionado,
     String? imagemSelecionada,
+    String? imagemFinalizacao, 
     String? nome,
+    String? nomeCliente, 
     String? descricao,
   }) {
     return CadastroNovo(
       horaSelecionada: horaSelecionada ?? this.horaSelecionada,
       statusSelecionado: statusSelecionado ?? this.statusSelecionado,
       imagemSelecionada: imagemSelecionada ?? this.imagemSelecionada,
+      imagemFinalizacao: imagemFinalizacao ?? this.imagemFinalizacao, 
       nome: nome ?? this.nome,
+      nomeCliente: nomeCliente ?? this.nomeCliente, 
       descricao: descricao ?? this.descricao,
     );
   }
@@ -65,7 +79,9 @@ class CadastroAtualizar extends CadastroState {
           horaSelecionada: cadastro.data,
           statusSelecionado: cadastro.status,
           imagemSelecionada: cadastro.foto,
+          imagemFinalizacao: cadastro.fotoFinalizacao, 
           nome: cadastro.nome,
+          nomeCliente: cadastro.nomeCliente ?? "", 
           descricao: cadastro.descricao ?? "",
         );
 
@@ -74,7 +90,9 @@ class CadastroAtualizar extends CadastroState {
     DateTime? horaSelecionada,
     int? statusSelecionado,
     String? imagemSelecionada,
+    String? imagemFinalizacao, 
     String? nome,
+    String? nomeCliente, 
     String? descricao,
   }) {
     return CadastroAtualizar(
@@ -82,7 +100,9 @@ class CadastroAtualizar extends CadastroState {
         data: horaSelecionada ?? cadastro.data,
         status: statusSelecionado ?? cadastro.status,
         foto: imagemSelecionada ?? cadastro.foto,
+        fotoFinalizacao: imagemFinalizacao ?? cadastro.fotoFinalizacao, 
         nome: nome ?? cadastro.nome,
+        nomeCliente: nomeCliente ?? cadastro.nomeCliente, 
         descricao: descricao ?? cadastro.descricao,
       ),
     );
