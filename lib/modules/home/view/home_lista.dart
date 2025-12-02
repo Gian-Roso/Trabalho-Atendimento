@@ -28,7 +28,7 @@ class HomeLista extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: const [
                 Text(
-                  "Quadrix",
+                  "Baguadrix",
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
                 Text(

@@ -62,7 +62,25 @@ class CardLista extends StatelessWidget {
                 Text(
                   atendimentoCard.descricao ?? "Sem descrição",
                   style: TextStyle(fontSize: 13, color: Colors.black87),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
+                
+                // ✅ Nome do Cliente
+                if (atendimentoCard.nomeCliente != null) ...[
+                  SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(Icons.person, size: 14, color: Colors.black54),
+                      SizedBox(width: 4),
+                      Text(
+                        "Cliente: ${atendimentoCard.nomeCliente}",
+                        style: TextStyle(fontSize: 13, color: Colors.black54),
+                      ),
+                    ],
+                  ),
+                ],
+                
                 SizedBox(height: 10),
                 Row(
                   children: [
