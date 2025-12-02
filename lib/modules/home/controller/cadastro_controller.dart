@@ -1,12 +1,15 @@
+import 'package:Baquadrix/modules/home/core/domain/contract/usecase/atendimento_usecase.dart';
+import 'package:Baquadrix/modules/home/core/domain/model/atendimento_model.dart';
+import 'package:Baquadrix/modules/home/core/service/notification_service.dart';
+import 'package:Baquadrix/modules/home/state/cadastro_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:trabfinal/modules/home/core/domain/contract/usecase/atendimento_usecase.dart';
-import 'package:trabfinal/modules/home/core/domain/model/atendimento_model.dart';
-import 'package:trabfinal/modules/home/state/cadastro_state.dart';
 
 @injectable
 class CadastroController extends Cubit<CadastroState> {
   final AtendimentoUsecase atendimentoUsecase;
+  final NotificationService _notificationService = NotificationService();
+
 
   CadastroController(this.atendimentoUsecase) : super(CadastroNovo());
 
@@ -47,13 +50,38 @@ class CadastroController extends Cubit<CadastroState> {
   }
 
   Future<AtendimentoModel> postCadastro(AtendimentoModel atendimentoModel) async {
-    final atendimentoSalvo = await atendimentoUsecase.postAtendimento(atendimentoModel);
+  final atendimentoSalvo = await atendimentoUsecase.postAtendimento(atendimentoModel);
+
+    if (atendimentoSalvo.id != null) {
+      await _notificationService.agendarNotificacaoAtendimento(
+        id: atendimentoSalvo.id!,
+        titulo: 'Atendimento: ${atendimentoSalvo.nome}',
+        corpo: atendimentoSalvo.nomeCliente != null
+            ? 'Cliente: ${atendimentoSalvo.nomeCliente}'
+            : 'Atendimento agendado',
+        dataHora: atendimentoSalvo.data,
+      );
+    }
+    
     emit(CadastroNovo());
     return atendimentoSalvo; 
   }
 
   Future<void> putAtendimento(AtendimentoModel atendimentoModel, int id) async {
-    await atendimentoUsecase.putAtendimento(atendimentoModel, id);
-    emit(CadastroNovo());
-  }
+  await atendimentoUsecase.putAtendimento(atendimentoModel, id);
+  
+  await _notificationService.cancelarNotificacao(id);
+  await _notificationService.agendarNotificacaoAtendimento(
+    id: id,
+    titulo: 'Atendimento: ${atendimentoModel.nome}',
+    corpo: atendimentoModel.nomeCliente != null
+        ? 'Cliente: ${atendimentoModel.nomeCliente}'
+        : 'Atendimento agendado',
+    dataHora: atendimentoModel.data,
+  );
+  
+  emit(CadastroNovo());
+}
+  
+  
 }

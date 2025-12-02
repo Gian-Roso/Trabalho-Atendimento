@@ -1,8 +1,8 @@
+import 'package:Baquadrix/modules/home/core/domain/contract/usecase/atendimento_usecase.dart';
+import 'package:Baquadrix/modules/home/core/domain/model/atendimento_model.dart';
+import 'package:Baquadrix/modules/home/state/lista_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:trabfinal/modules/home/core/domain/contract/usecase/atendimento_usecase.dart';
-import 'package:trabfinal/modules/home/core/domain/model/atendimento_model.dart';
-import 'package:trabfinal/modules/home/state/lista_state.dart';
 
 @injectable
 class ListaController extends Cubit<ListaState> {
@@ -86,7 +86,7 @@ class ListaController extends Cubit<ListaState> {
   void aplicarFiltroData({
     DateTime? dataInicio,
     DateTime? dataFim,
-    String tipoData = 'servico', // 'servico' ou 'criacao'
+    String tipoData = 'servico', 
   }) {
     if (state is ListaCarregada) {
       final estadoAtual = state as ListaCarregada;

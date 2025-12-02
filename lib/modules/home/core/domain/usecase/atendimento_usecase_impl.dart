@@ -1,7 +1,7 @@
+import 'package:Baquadrix/modules/home/core/domain/contract/repository/atendimento_repository.dart';
+import 'package:Baquadrix/modules/home/core/domain/contract/usecase/atendimento_usecase.dart';
+import 'package:Baquadrix/modules/home/core/domain/model/atendimento_model.dart';
 import 'package:injectable/injectable.dart';
-import 'package:trabfinal/modules/home/core/domain/contract/repository/atendimento_repository.dart';
-import 'package:trabfinal/modules/home/core/domain/contract/usecase/atendimento_usecase.dart';
-import 'package:trabfinal/modules/home/core/domain/model/atendimento_model.dart';
 
 @LazySingleton(as: AtendimentoUsecase)
 class AtendimentoUsecaseImpl implements AtendimentoUsecase {

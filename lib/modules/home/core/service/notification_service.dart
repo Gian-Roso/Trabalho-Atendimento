@@ -1,3 +1,4 @@
+import 'package:Baquadrix/modules/home/core/service/config_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -10,15 +11,15 @@ class NotificationService {
 
   final FlutterLocalNotificationsPlugin _notifications =
       FlutterLocalNotificationsPlugin();
+  final ConfigService _configService = ConfigService();
 
   Future<void> initialize() async {
     tz.initializeTimeZones();
     tz.setLocalLocation(tz.getLocation('America/Sao_Paulo'));
 
-    // Android
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    // ÍCONE CORRIGIDO
+    const androidSettings = AndroidInitializationSettings('ic_notification');
 
-    // iOS
     const iosSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -32,13 +33,9 @@ class NotificationService {
 
     await _notifications.initialize(
       initSettings,
-      onDidReceiveNotificationResponse: (details) {
-        // Ação ao clicar na notificação
-        print('Notificação clicada: ${details.payload}');
-      },
+      onDidReceiveNotificationResponse: (details) {},
     );
 
-    // Solicitar permissões
     await _requestPermissions();
   }
 
@@ -48,20 +45,36 @@ class NotificationService {
     }
   }
 
-  // ✅ Agendar notificação para um atendimento
   Future<void> agendarNotificacaoAtendimento({
     required int id,
     required String titulo,
     required String corpo,
     required DateTime dataHora,
-    int minutosAntes = 30, // Avisar 30min antes
   }) async {
-    final dataNotificacao = dataHora.subtract(Duration(minutes: minutosAntes));
+    final config = await _configService.carregarConfig();
 
-    // Só agenda se for no futuro
-    if (dataNotificacao.isBefore(DateTime.now())) {
-      print('Data já passou, não vai agendar');
+    if (!config.notificacoesAtivas) {
       return;
+    }
+
+    final dataNotificacao = dataHora.subtract(
+      Duration(minutes: config.minutosAntesNotificacao),
+    );
+
+    if (dataNotificacao.isBefore(DateTime.now())) {
+      return;
+    }
+
+    String somNotificacao = 'notification_sound';
+    switch (config.toqueNotificacao) {
+      case 'alarme':
+        somNotificacao = 'alarme_sound';
+        break;
+      case 'sino':
+        somNotificacao = 'sino_sound';
+        break;
+      default:
+        somNotificacao = 'notification_sound';
     }
 
     await _notifications.zonedSchedule(
@@ -76,12 +89,18 @@ class NotificationService {
           channelDescription: 'Notificações de atendimentos agendados',
           importance: Importance.max,
           priority: Priority.high,
-          sound: RawResourceAndroidNotificationSound('notification_sound'), // ✅ Som personalizado
-          playSound: true,
-          enableVibration: true,
+
+          // ÍCONE CORRIGIDO
+          icon: 'ic_notification',
+
+          sound: config.somAtivo
+              ? RawResourceAndroidNotificationSound(somNotificacao)
+              : null,
+          playSound: config.somAtivo,
+          enableVibration: config.vibracaoAtiva,
         ),
-        iOS: const DarwinNotificationDetails(
-          sound: 'notification_sound.aiff', // ✅ Som personalizado iOS
+        iOS: DarwinNotificationDetails(
+          sound: config.somAtivo ? '$somNotificacao.aiff' : null,
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
@@ -89,36 +108,48 @@ class NotificationService {
           UILocalNotificationDateInterpretation.absoluteTime,
       payload: 'atendimento_$id',
     );
-
-    print('Notificação agendada para: $dataNotificacao');
   }
 
-  // Cancelar notificação específica
   Future<void> cancelarNotificacao(int id) async {
     await _notifications.cancel(id);
   }
 
-  // Cancelar todas
   Future<void> cancelarTodas() async {
     await _notifications.cancelAll();
   }
 
-  // ✅ Notificação imediata (teste)
-  Future<void> mostrarNotificacaoImediata({
-    required String titulo,
-    required String corpo,
-  }) async {
+  Future<void> testarNotificacao() async {
+    final config = await _configService.carregarConfig();
+
+    String somNotificacao = 'notification_sound';
+    switch (config.toqueNotificacao) {
+      case 'alarme':
+        somNotificacao = 'alarme_sound';
+        break;
+      case 'sino':
+        somNotificacao = 'sino_sound';
+        break;
+    }
+
     await _notifications.show(
-      0,
-      titulo,
-      corpo,
+      999,
+      'Teste de Notificação',
+      'Esta é uma notificação de teste do Quadrix',
       NotificationDetails(
         android: AndroidNotificationDetails(
           'teste_channel',
           'Testes',
           importance: Importance.max,
           priority: Priority.high,
-          sound: RawResourceAndroidNotificationSound('notification_sound'),
+
+          // ÍCONE CORRIGIDO
+          icon: 'ic_notification',
+
+          sound: config.somAtivo
+              ? RawResourceAndroidNotificationSound(somNotificacao)
+              : null,
+          playSound: config.somAtivo,
+          enableVibration: config.vibracaoAtiva,
         ),
       ),
     );

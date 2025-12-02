@@ -1,7 +1,7 @@
+import 'package:Baquadrix/modules/home/controller/lista_controller.dart';
+import 'package:Baquadrix/modules/home/core/domain/model/atendimento_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:trabfinal/modules/home/controller/lista_controller.dart';
-import 'package:trabfinal/modules/home/core/domain/model/atendimento_model.dart';
 import 'status_chip.dart';
 import 'options_menu.dart';
 
@@ -65,8 +65,7 @@ class CardLista extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                
-                // ✅ Nome do Cliente
+
                 if (atendimentoCard.nomeCliente != null) ...[
                   SizedBox(height: 4),
                   Row(

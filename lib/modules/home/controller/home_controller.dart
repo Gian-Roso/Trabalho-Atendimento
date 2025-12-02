@@ -1,8 +1,8 @@
+import 'package:Baquadrix/modules/home/core/domain/contract/usecase/atendimento_usecase.dart';
+import 'package:Baquadrix/modules/home/core/domain/model/atendimento_model.dart';
+import 'package:Baquadrix/modules/home/state/home_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:trabfinal/modules/home/core/domain/contract/usecase/atendimento_usecase.dart';
-import 'package:trabfinal/modules/home/core/domain/model/atendimento_model.dart';
-import 'package:trabfinal/modules/home/state/home_state.dart';
 
 @injectable
 class HomeController extends Cubit<HomeState>{

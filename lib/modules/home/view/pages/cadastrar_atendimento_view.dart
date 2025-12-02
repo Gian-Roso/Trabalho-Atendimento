@@ -1,11 +1,11 @@
 import 'dart:io';
+import 'package:Baquadrix/core/di/injection.dart';
+import 'package:Baquadrix/modules/home/controller/cadastro_controller.dart';
+import 'package:Baquadrix/modules/home/core/domain/model/atendimento_model.dart';
+import 'package:Baquadrix/modules/home/state/cadastro_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:trabfinal/core/di/injection.dart';
-import 'package:trabfinal/modules/home/controller/cadastro_controller.dart';
-import 'package:trabfinal/modules/home/core/domain/model/atendimento_model.dart';
-import 'package:trabfinal/modules/home/state/cadastro_state.dart';
 
 class CadastrarAtendimentoView extends StatefulWidget {
   final AtendimentoModel? atendimentoParaEditar;
@@ -96,7 +96,7 @@ class _CadastrarAtendimentoViewState extends State<CadastrarAtendimentoView> {
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  // Imagem
+
                   InkWell(
                     onTap: selecionarImagem,
                     child: Column(
@@ -138,7 +138,7 @@ class _CadastrarAtendimentoViewState extends State<CadastrarAtendimentoView> {
                     decoration: _input("Nome Serviço"),
                   ),
                   const SizedBox(height: 16),
-                  // Nome do Cliente
+
                   TextField(
                     controller: nomeClienteController, 
                     onChanged: (value) => controller.atualizarNomeCliente(value),

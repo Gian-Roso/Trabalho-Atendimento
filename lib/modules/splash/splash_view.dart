@@ -1,5 +1,5 @@
+import 'package:Baquadrix/modules/home/view/home_view.dart';
 import 'package:flutter/material.dart';
-import 'package:trabfinal/modules/home/view/home_view.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});

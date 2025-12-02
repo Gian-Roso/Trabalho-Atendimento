@@ -1,7 +1,7 @@
+import 'package:Baquadrix/modules/home/controller/lista_controller.dart';
+import 'package:Baquadrix/modules/home/state/lista_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:trabfinal/modules/home/controller/lista_controller.dart';
-import 'package:trabfinal/modules/home/state/lista_state.dart';
 
 class DialogFiltros extends StatefulWidget {
   const DialogFiltros({super.key});
@@ -134,8 +134,7 @@ class _DialogFiltrosState extends State<DialogFiltros> {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
-              
-              // Tipo de data
+
               Row(
                 children: [
                   Expanded(

@@ -1,4 +1,6 @@
-import 'package:trabfinal/modules/home/core/domain/model/atendimento_model.dart';
+
+
+import 'package:Baquadrix/modules/home/core/domain/model/atendimento_model.dart';
 
 abstract class CadastroState {
   final DateTime? horaSelecionada;
@@ -32,22 +34,14 @@ abstract class CadastroState {
 
 class CadastroNovo extends CadastroState {
   CadastroNovo({
-    DateTime? horaSelecionada,
-    int statusSelecionado = 0,
-    String? imagemSelecionada,
-    String? imagemFinalizacao, 
-    String nome = "",
-    String nomeCliente = "", 
-    String descricao = "",
-  }) : super(
-          horaSelecionada: horaSelecionada,
-          statusSelecionado: statusSelecionado,
-          imagemSelecionada: imagemSelecionada,
-          imagemFinalizacao: imagemFinalizacao, 
-          nome: nome,
-          nomeCliente: nomeCliente, 
-          descricao: descricao,
-        );
+    super.horaSelecionada,
+    super.statusSelecionado,
+    super.imagemSelecionada,
+    super.imagemFinalizacao, 
+    super.nome,
+    super.nomeCliente, 
+    super.descricao,
+  });
 
   @override
   CadastroState copyWith({

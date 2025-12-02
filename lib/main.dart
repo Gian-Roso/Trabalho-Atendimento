@@ -1,6 +1,7 @@
+import 'package:Baquadrix/core/di/injection.dart';
+import 'package:Baquadrix/modules/splash/splash_view.dart';
 import 'package:flutter/material.dart';
-import 'package:trabfinal/core/di/injection.dart';
-import 'package:trabfinal/modules/splash/splash_view.dart';
+
 
 void main() {
   configureDependencies();

@@ -1,4 +1,5 @@
-import 'package:trabfinal/modules/home/core/domain/model/atendimento_model.dart';
+import 'package:Baquadrix/modules/home/core/domain/model/atendimento_model.dart';
+
 
 abstract class HomeState {}
 

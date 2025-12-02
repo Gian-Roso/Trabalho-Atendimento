@@ -1,10 +1,12 @@
+import 'package:Baquadrix/modules/home/controller/lista_controller.dart';
+import 'package:Baquadrix/modules/home/state/lista_state.dart';
+import 'package:Baquadrix/modules/home/view/components/card_lista.dart';
+import 'package:Baquadrix/modules/home/view/components/dialog_filtros.dart';
+import 'package:Baquadrix/modules/home/view/configuration/configuracoes_view.dart';
+import 'package:Baquadrix/modules/home/view/pages/cadastrar_atendimento_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:trabfinal/modules/home/controller/lista_controller.dart';
-import 'package:trabfinal/modules/home/state/lista_state.dart';
-import 'package:trabfinal/modules/home/view/components/card_lista.dart';
-import 'package:trabfinal/modules/home/view/components/dialog_filtros.dart';
-import 'package:trabfinal/modules/home/view/pages/cadastrar_atendimento_view.dart';
+
 
 class HomeLista extends StatelessWidget {
   const HomeLista({super.key});
@@ -38,6 +40,20 @@ class HomeLista extends StatelessWidget {
               ],
             ),
             actions: [
+
+              IconButton(
+                icon: Icon(Icons.settings, color: Colors.white),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const ConfiguracoesView(),
+                    ),
+                  );
+                },
+                tooltip: 'Configurações',
+              ),
+
               Stack(
                 children: [
                   IconButton(
@@ -70,6 +86,7 @@ class HomeLista extends StatelessWidget {
               ),
             ],
           ),
+
           body: Column(
             children: [
               if (state.temFiltrosAtivos)

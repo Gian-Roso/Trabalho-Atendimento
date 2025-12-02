@@ -1,7 +1,7 @@
 import 'dart:io';
+import 'package:Baquadrix/modules/home/core/domain/model/atendimento_model.dart';
+import 'package:Baquadrix/modules/home/view/components/status_chip.dart';
 import 'package:flutter/material.dart';
-import 'package:trabfinal/modules/home/core/domain/model/atendimento_model.dart';
-import 'package:trabfinal/modules/home/view/components/status_chip.dart';
 
 class DetalhesAtendimentoView extends StatelessWidget {
   final AtendimentoModel atendimento;
@@ -179,7 +179,7 @@ class DetalhesAtendimentoView extends StatelessWidget {
                           SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              "⚠️ Atendimento atrasado!",
+                              "Atendimento atrasado!",
                               style: TextStyle(
                                 color: Colors.orange,
                                 fontWeight: FontWeight.bold,

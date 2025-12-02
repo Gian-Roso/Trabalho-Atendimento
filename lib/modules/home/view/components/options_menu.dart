@@ -1,10 +1,10 @@
+import 'package:Baquadrix/modules/home/controller/lista_controller.dart';
+import 'package:Baquadrix/modules/home/core/domain/model/atendimento_model.dart';
+import 'package:Baquadrix/modules/home/view/components/dialog_concluir.dart';
+import 'package:Baquadrix/modules/home/view/pages/cadastrar_atendimento_view.dart';
+import 'package:Baquadrix/modules/home/view/pages/detalhes_atendimento_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:trabfinal/modules/home/controller/lista_controller.dart';
-import 'package:trabfinal/modules/home/core/domain/model/atendimento_model.dart';
-import 'package:trabfinal/modules/home/view/components/dialog_concluir.dart';
-import 'package:trabfinal/modules/home/view/pages/cadastrar_atendimento_view.dart';
-import 'package:trabfinal/modules/home/view/pages/detalhes_atendimento_view.dart';
 
 class OptionsMenu extends StatelessWidget {
   final AtendimentoModel atendimento;

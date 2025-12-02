@@ -1,9 +1,10 @@
+import 'package:Baquadrix/core/di/injection.dart';
+import 'package:Baquadrix/modules/home/controller/lista_controller.dart';
+import 'package:Baquadrix/modules/home/state/lista_state.dart';
+import 'package:Baquadrix/modules/home/view/home_lista.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:trabfinal/core/di/injection.dart';
-import 'package:trabfinal/modules/home/controller/lista_controller.dart';
-import 'package:trabfinal/modules/home/state/lista_state.dart';
-import 'package:trabfinal/modules/home/view/home_lista.dart';
+
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
